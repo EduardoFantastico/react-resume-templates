@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme='forest'] {
+  --color-primary: #166534;
+  --color-primary-light: #4ade80;
+  --color-accent: #0f766e;
+  --color-bg: #f4fbf6;
+  --color-surface: #eaf7ee;
+  --color-text: #052e16;
+  --color-text-muted: #3f5b4a;
+  --color-border: #cdebd4;
+}
+
+[data-theme='ocean'] {
+  --color-primary: #0f5ea8;
+  --color-primary-light: #38bdf8;
+  --color-accent: #14b8a6;
+  --color-bg: #f4fbff;
+  --color-surface: #eaf6ff;
+  --color-text: #082f49;
+  --color-text-muted: #4b6478;
+  --color-border: #cfe8f7;
+}
+
+[data-theme='plum'] {
+  --color-primary: #7c3aed;
+  --color-primary-light: #c4b5fd;
+  --color-accent: #db2777;
+  --color-bg: #fcf7ff;
+  --color-surface: #f3ecff;
+  --color-text: #311b63;
+  --color-text-muted: #5b4b7a;
+  --color-border: #e1d6fb;
+}
+
+[data-theme='ember'] {
+  --color-primary: #c2410c;
+  --color-primary-light: #fdba74;
+  --color-accent: #ef4444;
+  --color-bg: #fff8f4;
+  --color-surface: #fff1e8;
+  --color-text: #431407;
+  --color-text-muted: #7c5a4d;
+  --color-border: #f7d6c7;
+}
+
+[data-theme='sand'] {
+  --color-primary: #b45309;
+  --color-primary-light: #fcd34d;
+  --color-accent: #d97706;
+  --color-bg: #fffdf8;
+  --color-surface: #fbf4e7;
+  --color-text: #3f2a16;
+  --color-text-muted: #6b5b49;
+  --color-border: #ead9b8;
+}
+
+.dark {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+    background: var(--color-bg);
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: theme('fontFamily.sans');
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
+  }
+}

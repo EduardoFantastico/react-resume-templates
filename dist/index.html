@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de" data-theme="blue">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="color-scheme" content="light dark" />
+    <title>React CV Templates</title>
+    <script>
+      (() => {
+        const themeKey = 'react-resume-templates.theme';
+        const darkKey = 'react-resume-templates.dark-mode';
+        const storedTheme = localStorage.getItem(themeKey) || 'blue';
+        const storedDark = localStorage.getItem(darkKey);
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', storedTheme);
+        if (storedDark === 'true' || (storedDark === null && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-DJgO0sP-.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dwhzipdp.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
