@@ -27,6 +27,14 @@ export default {
         sans: ['Manrope', 'Aptos', 'Segoe UI', 'sans-serif'],
         display: ['Space Grotesk', 'Manrope', 'Aptos', 'sans-serif'],
         mono: ['IBM Plex Mono', 'SFMono-Regular', 'monospace'],
+        system: [
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'sans-serif',
+        ],
       },
       keyframes: {
         float: {

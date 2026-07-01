@@ -8,7 +8,6 @@ export type ThemeName = (typeof THEME_NAMES)[number];
 
 export type SkillCategory = 'language' | 'framework' | 'tool' | 'platform' | 'other';
 export type AvatarSize = 'sm' | 'md' | 'lg';
-export type SectionAlign = 'left' | 'center';
 
 export interface SocialLinks {
   github?: string;
@@ -92,16 +91,6 @@ export interface LayoutNavItem {
   path: `/${LayoutVariant}` | '/';
 }
 
-export interface TimelineEntry {
-  title: string;
-  subtitle: string;
-  start: string;
-  end: string;
-  description?: string;
-  tags?: string[];
-  location?: string;
-}
-
 export interface AvatarProps {
   name: string;
   avatar?: string;
@@ -111,31 +100,12 @@ export interface AvatarProps {
 
 export interface BadgeProps {
   label: string;
-  emphasis?: 'default' | 'accent';
-  className?: string;
-}
-
-export interface SectionTitleProps {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  align?: SectionAlign;
+  emphasis?: 'default' | 'accent' | 'glass';
   className?: string;
 }
 
 export interface SocialLinksProps {
   social: SocialLinks;
-  className?: string;
-}
-
-export interface TimelineProps {
-  title: string;
-  entries: TimelineEntry[];
-  className?: string;
-}
-
-export interface ProjectCardProps {
-  project: ProjectItem;
   className?: string;
 }
 

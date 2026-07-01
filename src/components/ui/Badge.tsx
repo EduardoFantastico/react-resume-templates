@@ -12,7 +12,9 @@ export function Badge({ label, emphasis = 'default', className = '' }: BadgeProp
   const toneClassName =
     emphasis === 'accent'
       ? 'bg-primary text-white border-primary shadow-glow'
-      : 'bg-surface text-apptext border-border shadow-sm';
+      : emphasis === 'glass'
+        ? 'bg-white/10 text-white border-white/25 backdrop-blur-md'
+        : 'bg-surface text-apptext border-border shadow-sm';
 
   return (
     <span
