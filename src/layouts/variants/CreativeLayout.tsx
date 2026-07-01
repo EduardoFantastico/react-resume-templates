@@ -63,25 +63,7 @@ export default function CreativeLayout() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <section className="grid gap-6 md:grid-cols-3">
-          {[
-            { label: 'Skills', value: skills.length },
-            { label: 'Projekte', value: projects.length },
-            { label: 'Stationen', value: experience.length + education.length },
-          ].map((stat, index) => (
-            <div
-              key={stat.label}
-              className={`rounded-3xl p-8 text-white ${index === 1 ? 'bg-accent' : 'bg-primary'}`}
-            >
-              <p className="font-display text-6xl font-black">{stat.value}</p>
-              <p className="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <section className="mt-16 space-y-6">
+        <section className="space-y-6">
           <h2 className="font-display text-4xl font-black uppercase text-apptext">Skills</h2>
           <div className="flex flex-wrap gap-3">
             {skills.map((skill, index) => (

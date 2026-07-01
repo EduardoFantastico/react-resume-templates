@@ -18,8 +18,7 @@ const SOCIAL_LABELS: Record<string, string> = {
  * Renders the minimal variant: one prose column, plain text, one accent line.
  */
 export default function MinimalLayout() {
-  const { personal, skills, experience, education, projects, certifications, languages } =
-    cvData;
+  const { personal, skills, experience, education, projects, certifications, languages } = cvData;
 
   const socialEntries = Object.entries(personal.social).filter(([, url]) => Boolean(url));
   const contactLine = [personal.email, personal.phone, personal.location].join('  —  ');
@@ -39,7 +38,12 @@ export default function MinimalLayout() {
             {socialEntries.length > 0 ? '  —  ' : ''}
             {socialEntries.map(([key, url], index) => (
               <span key={key}>
-                <a href={url} target="_blank" rel="noreferrer" className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary"
+                >
                   {SOCIAL_LABELS[key] ?? key}
                 </a>
                 {index < socialEntries.length - 1 ? '  —  ' : ''}
@@ -106,7 +110,12 @@ export default function MinimalLayout() {
                   {project.liveUrl ? (
                     <>
                       {'  —  '}
-                      <a href={project.liveUrl} target="_blank" rel="noreferrer" className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary"
+                      >
                         Live
                       </a>
                     </>
@@ -114,7 +123,12 @@ export default function MinimalLayout() {
                   {project.repoUrl ? (
                     <>
                       {'  —  '}
-                      <a href={project.repoUrl} target="_blank" rel="noreferrer" className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary">
+                      <a
+                        href={project.repoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary"
+                      >
                         Code
                       </a>
                     </>
@@ -128,7 +142,12 @@ export default function MinimalLayout() {
         <section className="space-y-6">
           <p className="text-sm uppercase tracking-[0.2em] text-muted">Weiteres</p>
           <p className="leading-8 text-apptext">
-            {certifications.map((certification) => `${certification.name} (${certification.issuer}, ${certification.year})`).join('  —  ')}
+            {certifications
+              .map(
+                (certification) =>
+                  `${certification.name} (${certification.issuer}, ${certification.year})`,
+              )
+              .join('  —  ')}
           </p>
           <p className="leading-8 text-apptext">
             {languages.map((language) => `${language.language}: ${language.level}`).join('  —  ')}
@@ -138,11 +157,17 @@ export default function MinimalLayout() {
         <footer className="space-y-3 pt-4">
           <p className="text-sm uppercase tracking-[0.2em] text-muted">Kontakt</p>
           <p className="leading-8 text-apptext">
-            <a href={`mailto:${personal.email}`} className="underline decoration-primary underline-offset-4 hover:text-primary">
+            <a
+              href={`mailto:${personal.email}`}
+              className="underline decoration-primary underline-offset-4 hover:text-primary"
+            >
               {personal.email}
             </a>
             {'  —  '}
-            <a href={`tel:${personal.phone}`} className="underline decoration-primary underline-offset-4 hover:text-primary">
+            <a
+              href={`tel:${personal.phone}`}
+              className="underline decoration-primary underline-offset-4 hover:text-primary"
+            >
               {personal.phone}
             </a>
           </p>

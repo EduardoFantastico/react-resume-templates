@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export const LAYOUT_VARIANTS = ['classic', 'modern', 'minimal', 'sidebar', 'creative'] as const;
+export const LAYOUT_VARIANTS = ['minimal', 'sidebar', 'creative', 'puzzle'] as const;
 export type LayoutVariant = (typeof LAYOUT_VARIANTS)[number];
 
 export const THEME_NAMES = ['ink', 'forest', 'ocean', 'plum', 'ember', 'sand'] as const;

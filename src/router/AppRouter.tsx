@@ -6,20 +6,19 @@ Usage example: <AppRouter />
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
+import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
-import ClassicLayout from '@/layouts/variants/ClassicLayout';
 import CreativeLayout from '@/layouts/variants/CreativeLayout';
 import MinimalLayout from '@/layouts/variants/MinimalLayout';
-import ModernLayout from '@/layouts/variants/ModernLayout';
+import PuzzleLayout from '@/layouts/variants/PuzzleLayout';
 import SidebarLayout from '@/layouts/variants/SidebarLayout';
 import type { LayoutNavItem } from '@/types/cv.types';
 
 const NAV_ITEMS: LayoutNavItem[] = [
-  { label: 'Classic', path: '/classic' },
-  { label: 'Modern', path: '/modern' },
   { label: 'Minimal', path: '/minimal' },
   { label: 'Sidebar', path: '/sidebar' },
   { label: 'Creative', path: '/creative' },
+  { label: 'Puzzle', path: '/puzzle' },
 ];
 
 /**
@@ -38,21 +37,26 @@ export function AppRouter() {
       };
 
   return (
-    <div className="min-h-screen bg-bg text-apptext">
+    <div className="flex min-h-screen flex-col bg-bg text-apptext">
       <Header navItems={NAV_ITEMS} />
       <AnimatePresence mode="wait">
-        <motion.div key={location.pathname} {...transitionProps} transition={{ duration: 0.3 }}>
+        <motion.div
+          key={location.pathname}
+          {...transitionProps}
+          transition={{ duration: 0.3 }}
+          className="flex-1"
+        >
           <Routes location={location}>
-            <Route path="/" element={<Navigate replace to="/classic" />} />
-            <Route path="/classic" element={<ClassicLayout />} />
-            <Route path="/modern" element={<ModernLayout />} />
+            <Route path="/" element={<Navigate replace to="/minimal" />} />
             <Route path="/minimal" element={<MinimalLayout />} />
             <Route path="/sidebar" element={<SidebarLayout />} />
             <Route path="/creative" element={<CreativeLayout />} />
-            <Route path="*" element={<Navigate replace to="/classic" />} />
+            <Route path="/puzzle" element={<PuzzleLayout />} />
+            <Route path="*" element={<Navigate replace to="/minimal" />} />
           </Routes>
         </motion.div>
       </AnimatePresence>
+      <Footer />
     </div>
   );
 }

@@ -29,7 +29,7 @@ export function Header({ navItems }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 h-20 border-b border-border bg-bg/95 backdrop-blur">
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link to="/classic" className="flex items-center gap-3 focus-ring">
+        <Link to="/" className="flex items-center gap-3 focus-ring">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white shadow-glow">
             <Code2 className="h-5 w-5" />
           </div>
