@@ -1,5 +1,5 @@
 /*
-Purpose: A playful, interactive layout — visitors drag puzzle blocks from a pile into board slots to assemble the profile themselves.
+Purpose: A playful, interactive layout — visitors drag pentomino-shaped puzzle pieces onto a 5x6 board to assemble the profile themselves.
 Props summary: none; renders the shared CV content.
 Usage example: default export used by the puzzle route.
 */
@@ -15,10 +15,9 @@ import {
   Phone,
   Sparkles,
   User,
-  X,
   type LucideIcon,
 } from 'lucide-react';
-import { useRef, useState, type DragEvent } from 'react';
+import { useState, type DragEvent, type KeyboardEvent } from 'react';
 
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
@@ -28,29 +27,113 @@ import { cvData } from '@/data/cv-data';
 
 type CardKey = 'profil' | 'erfahrung' | 'ausbildung' | 'skills' | 'projekte' | 'kontakt';
 
-type DragPayload =
-  | { key: CardKey; from: 'pile' }
-  | { key: CardKey; from: 'slot'; slotIndex: number };
+type Cell = readonly [row: number, col: number];
 
 interface CardMeta {
   key: CardKey;
   label: string;
   hint: string;
   icon: LucideIcon;
+  /** Pentomino shape as relative [row, col] offsets, normalized to start at (0, 0). */
+  shape: readonly Cell[];
 }
 
+interface Placement {
+  key: CardKey;
+  /** Grid coordinates of the shape's (0, 0) offset. */
+  row: number;
+  col: number;
+}
+
+interface DragPayload {
+  key: CardKey;
+  /** Which cell of the shape the pointer grabbed, so drops land precisely. */
+  grabRow: number;
+  grabCol: number;
+}
+
+const GRID_ROWS = 5;
+const GRID_COLS = 6;
+
+// Six distinct pentominoes (F, I, N, Z, P, V) verified to tile a 5x6 rectangle
+// with zero overlap and zero gaps — solving the board is genuinely possible.
 const CARDS: CardMeta[] = [
-  { key: 'profil', label: 'Profil', hint: 'Wer ich bin', icon: User },
-  { key: 'erfahrung', label: 'Erfahrung', hint: 'Wo ich gearbeitet habe', icon: Briefcase },
-  { key: 'ausbildung', label: 'Ausbildung', hint: 'Was ich gelernt habe', icon: GraduationCap },
-  { key: 'skills', label: 'Skills', hint: 'Was ich kann', icon: Sparkles },
-  { key: 'projekte', label: 'Projekte', hint: 'Was ich gebaut habe', icon: FolderKanban },
-  { key: 'kontakt', label: 'Kontakt', hint: 'Wie man mich erreicht', icon: Mail },
+  {
+    key: 'profil',
+    label: 'Profil',
+    hint: 'Wer ich bin',
+    icon: User,
+    shape: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]],
+  },
+  {
+    key: 'erfahrung',
+    label: 'Erfahrung',
+    hint: 'Wo ich gearbeitet habe',
+    icon: Briefcase,
+    shape: [[0, 0], [1, 0], [1, 1], [1, 2], [2, 1]],
+  },
+  {
+    key: 'ausbildung',
+    label: 'Ausbildung',
+    hint: 'Was ich gelernt habe',
+    icon: GraduationCap,
+    shape: [[0, 1], [1, 0], [1, 1], [2, 0], [3, 0]],
+  },
+  {
+    key: 'skills',
+    label: 'Skills',
+    hint: 'Was ich kann',
+    icon: Sparkles,
+    shape: [[0, 1], [0, 2], [1, 1], [2, 0], [2, 1]],
+  },
+  {
+    key: 'projekte',
+    label: 'Projekte',
+    hint: 'Was ich gebaut habe',
+    icon: FolderKanban,
+    shape: [[0, 0], [1, 0], [1, 1], [2, 0], [2, 1]],
+  },
+  {
+    key: 'kontakt',
+    label: 'Kontakt',
+    hint: 'Wie man mich erreicht',
+    icon: Mail,
+    shape: [[0, 2], [1, 2], [2, 0], [2, 1], [2, 2]],
+  },
 ];
 
 const CARD_BY_KEY = new Map(CARDS.map((card) => [card.key, card]));
 
-const SLOT_COUNT = 3;
+// Theme colors are plain CSS custom properties (not Tailwind's alpha-aware
+// rgb() form), so `bg-primary/70` generates no rule at all. color-mix()
+// (already used for ::selection in src/styles/index.css) works instead.
+const TONE: Record<CardKey, string> = {
+  profil: 'bg-primary text-white',
+  erfahrung: 'bg-accent text-white',
+  ausbildung: 'bg-[color-mix(in_srgb,var(--color-primary)_70%,transparent)] text-white',
+  skills: 'bg-[color-mix(in_srgb,var(--color-accent)_70%,transparent)] text-white',
+  projekte: 'bg-primaryLight text-apptext',
+  kontakt: 'bg-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] text-apptext',
+};
+
+function boundingSize(shape: readonly Cell[]) {
+  const rows = Math.max(...shape.map(([row]) => row)) + 1;
+  const cols = Math.max(...shape.map(([, col]) => col)) + 1;
+  return { rows, cols };
+}
+
+function cellsFor(card: CardMeta, row: number, col: number): Cell[] {
+  return card.shape.map(([dr, dc]) => [row + dr, col + dc]);
+}
+
+function activateOnKey(fn: () => void) {
+  return (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      fn();
+    }
+  };
+}
 
 function PuzzlePanel({ cardKey }: { cardKey: CardKey }) {
   const { personal, skills, experience, education, projects, certifications, languages } = cvData;
@@ -200,64 +283,105 @@ function PuzzlePanel({ cardKey }: { cardKey: CardKey }) {
 }
 
 /**
- * Renders the puzzle variant: real drag-and-drop blocks that plug into board slots and reveal content on the right.
+ * Renders the puzzle variant: pentomino-shaped blocks that drag onto a 5x6 board and reveal content on the right.
  */
 export default function PuzzleLayout() {
-  const [slots, setSlots] = useState<(CardKey | null)[]>(() => Array(SLOT_COUNT).fill(null));
+  const [placements, setPlacements] = useState<Placement[]>([]);
   const [selectedKey, setSelectedKey] = useState<CardKey | null>(null);
   const [dragPayload, setDragPayload] = useState<DragPayload | null>(null);
-  const [dragOverSlot, setDragOverSlot] = useState<number | null>(null);
+  const [hoverCell, setHoverCell] = useState<{ row: number; col: number } | null>(null);
   const [dragOverPile, setDragOverPile] = useState(false);
-  const sectionRefs = useRef<Partial<Record<CardKey, HTMLDivElement | null>>>({});
 
-  const dockedKeys = slots.filter((key): key is CardKey => key !== null);
+  const dockedKeys = CARDS.filter((card) =>
+    placements.some((placement) => placement.key === card.key),
+  ).map((card) => card.key);
   const pile = CARDS.filter((card) => !dockedKeys.includes(card.key));
 
-  const scrollToCard = (key: CardKey) => {
-    sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const placeInSlot = (slotIndex: number, payload: DragPayload) => {
-    setSlots((prev) => {
-      const next = [...prev];
-      if (payload.from === 'pile') {
-        if (next[slotIndex] !== null) return prev;
-        next[slotIndex] = payload.key;
-      } else {
-        if (payload.slotIndex === slotIndex) return prev;
-        const displaced = next[slotIndex];
-        next[slotIndex] = payload.key;
-        next[payload.slotIndex] = displaced;
+  const isValidPlacement = (card: CardMeta, row: number, col: number, ignoreKey: CardKey) => {
+    const cells = cellsFor(card, row, col);
+    for (const [r, c] of cells) {
+      if (r < 0 || r >= GRID_ROWS || c < 0 || c >= GRID_COLS) return false;
+    }
+    for (const other of placements) {
+      if (other.key === ignoreKey) continue;
+      const otherCard = CARD_BY_KEY.get(other.key);
+      if (!otherCard) continue;
+      const otherCells = cellsFor(otherCard, other.row, other.col);
+      for (const [r, c] of cells) {
+        if (otherCells.some(([or, oc]) => or === r && oc === c)) return false;
       }
-      return next;
-    });
-  };
-
-  const removeFromSlot = (slotIndex: number) => {
-    setSlots((prev) => prev.map((key, index) => (index === slotIndex ? null : key)));
-  };
-
-  const handlePileCardClick = (key: CardKey) => {
-    setSelectedKey((current) => (current === key ? null : key));
-  };
-
-  const handleSlotClick = (slotIndex: number) => {
-    const occupant = slots[slotIndex];
-    if (occupant) {
-      scrollToCard(occupant);
-      return;
     }
-    if (selectedKey) {
-      placeInSlot(slotIndex, { key: selectedKey, from: 'pile' });
-      setSelectedKey(null);
-    }
+    return true;
   };
 
   const resetDragState = () => {
     setDragPayload(null);
-    setDragOverSlot(null);
+    setHoverCell(null);
     setDragOverPile(false);
   };
+
+  const tryPlace = (key: CardKey, row: number, col: number) => {
+    const card = CARD_BY_KEY.get(key);
+    if (!card || !isValidPlacement(card, row, col, key)) return false;
+    setPlacements((prev) => [...prev.filter((p) => p.key !== key), { key, row, col }]);
+    return true;
+  };
+
+  const removeFromGrid = (key: CardKey) => {
+    setPlacements((prev) => prev.filter((p) => p.key !== key));
+  };
+
+  const handlePileDragStart = (key: CardKey) => (event: unknown) => {
+    const dragEvent = event as DragEvent<HTMLDivElement>;
+    dragEvent.dataTransfer.setData('text/plain', key);
+    dragEvent.dataTransfer.effectAllowed = 'move';
+    // Anchor on the shape's first *filled* cell (not the bounding-box corner,
+    // which is empty for shapes like N/Z/V) so the drop lands where expected.
+    const [grabRow, grabCol] = CARD_BY_KEY.get(key)?.shape[0] ?? [0, 0];
+    setDragPayload({ key, grabRow, grabCol });
+  };
+
+  const handlePieceDragStart = (key: CardKey, grabRow: number, grabCol: number) => (event: unknown) => {
+    const dragEvent = event as DragEvent<HTMLDivElement>;
+    dragEvent.dataTransfer.setData('text/plain', key);
+    dragEvent.dataTransfer.effectAllowed = 'move';
+    setDragPayload({ key, grabRow, grabCol });
+  };
+
+  const handleCellDragOver = (row: number, col: number) => (event: DragEvent<HTMLDivElement>) => {
+    if (!dragPayload) return;
+    event.preventDefault();
+    setHoverCell({ row, col });
+  };
+
+  const handleCellDrop = (row: number, col: number) => (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (dragPayload) {
+      tryPlace(dragPayload.key, row - dragPayload.grabRow, col - dragPayload.grabCol);
+    }
+    resetDragState();
+  };
+
+  const handleCellClick = (row: number, col: number) => {
+    if (!selectedKey) return;
+    const [grabRow, grabCol] = CARD_BY_KEY.get(selectedKey)?.shape[0] ?? [0, 0];
+    if (tryPlace(selectedKey, row - grabRow, col - grabCol)) {
+      setSelectedKey(null);
+    }
+  };
+
+  const preview = (() => {
+    if (!dragPayload || !hoverCell) return null;
+    const card = CARD_BY_KEY.get(dragPayload.key);
+    if (!card) return null;
+    const row = hoverCell.row - dragPayload.grabRow;
+    const col = hoverCell.col - dragPayload.grabCol;
+    return {
+      cells: cellsFor(card, row, col),
+      valid: isValidPlacement(card, row, col, dragPayload.key),
+    };
+  })();
+  const previewValid = preview?.valid ?? false;
 
   return (
     <BaseLayout variant="puzzle" fullBleed>
@@ -268,33 +392,34 @@ export default function PuzzleLayout() {
             Setz dir mein Profil selbst zusammen
           </h1>
           <p className="mt-3 leading-7 text-muted">
-            Zieh einen Baustein auf einen der 3 freien Slots im Board, um ihn einzudocken — oder tippe
-            erst den Baustein und dann einen Slot an. Der Inhalt erscheint rechts, alle angedockten
-            Bausteine gemeinsam im Menü.
+            Zieh die sechs Pentomino-Bausteine ins 5×6-Feld. Jeder Baustein zeigt rechts im Menü
+            seinen Inhalt, sobald er im Feld liegt. Mit etwas Tüfteln passen alle sechs
+            überlappungsfrei zusammen — du kannst sie aber auch einfach frei hin und her ziehen.
           </p>
         </header>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,220px)_minmax(0,260px)_minmax(0,1.2fr)]">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)_minmax(0,360px)]">
           <div
-            className={`space-y-5 rounded-3xl transition-colors ${dragOverPile ? 'bg-primary/5 ring-2 ring-primary/40' : ''}`}
+            className={`space-y-5 rounded-3xl p-1 transition-colors ${
+              dragOverPile ? 'bg-primary/5 ring-2 ring-primary/40' : ''
+            }`}
             onDragOver={(event) => {
-              if (dragPayload?.from !== 'slot') return;
+              if (!dragPayload) return;
               event.preventDefault();
               setDragOverPile(true);
             }}
             onDragLeave={() => setDragOverPile(false)}
             onDrop={(event) => {
               event.preventDefault();
-              if (dragPayload?.from === 'slot') {
-                removeFromSlot(dragPayload.slotIndex);
-              }
+              if (dragPayload) removeFromGrid(dragPayload.key);
               resetDragState();
             }}
           >
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Bausteine</p>
-            <div className="space-y-5">
+            <div className="space-y-4">
               <AnimatePresence>
                 {pile.map((card) => {
+                  const { rows, cols } = boundingSize(card.shape);
                   const Icon = card.icon;
                   const isSelected = selectedKey === card.key;
                   return (
@@ -303,150 +428,144 @@ export default function PuzzleLayout() {
                       layoutId={`card-${card.key}`}
                       layout
                       draggable
-                      onDragStart={(event: unknown) => {
-                        const dragEvent = event as DragEvent<HTMLDivElement>;
-                        dragEvent.dataTransfer.setData('text/plain', card.key);
-                        dragEvent.dataTransfer.effectAllowed = 'move';
-                        setDragPayload({ key: card.key, from: 'pile' });
-                      }}
+                      role="button"
+                      tabIndex={0}
+                      onDragStart={handlePileDragStart(card.key)}
                       onDragEnd={resetDragState}
-                      onClick={() => handlePileCardClick(card.key)}
+                      onClick={() => setSelectedKey((current) => (current === card.key ? null : card.key))}
+                      onKeyDown={activateOnKey(() =>
+                        setSelectedKey((current) => (current === card.key ? null : card.key)),
+                      )}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      className={`group relative block w-full cursor-grab select-none rounded-2xl border-2 bg-surface py-4 pl-5 pr-8 text-left shadow-soft active:cursor-grabbing focus-ring ${
+                      className={`flex cursor-grab items-center gap-3 rounded-2xl border-2 bg-surface p-4 text-left shadow-soft active:cursor-grabbing focus-ring ${
                         isSelected ? 'border-primary bg-primary/10' : 'border-border hover:border-primary'
                       }`}
                     >
-                      <span
-                        aria-hidden
-                        className={`absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 bg-surface ${
-                          isSelected ? 'border-primary' : 'border-border group-hover:border-primary'
-                        }`}
-                      />
-                      <span className="flex items-center gap-2.5">
-                        <Icon className="h-4 w-4 shrink-0 text-primary" />
-                        <span className="font-semibold text-apptext">{card.label}</span>
-                      </span>
-                      <span className="mt-1 block text-xs text-muted">{card.hint}</span>
+                      <div
+                        className="grid shrink-0 gap-[3px]"
+                        style={{
+                          gridTemplateColumns: `repeat(${cols}, 13px)`,
+                          gridTemplateRows: `repeat(${rows}, 13px)`,
+                        }}
+                      >
+                        {Array.from({ length: rows * cols }).map((_, index) => {
+                          const r = Math.floor(index / cols);
+                          const c = index % cols;
+                          const filled = card.shape.some(([sr, sc]) => sr === r && sc === c);
+                          return (
+                            <span
+                              key={index}
+                              className={`rounded-[3px] ${filled ? TONE[card.key] : ''}`}
+                            />
+                          );
+                        })}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 shrink-0 text-primary" />
+                          <span className="truncate font-semibold text-apptext">{card.label}</span>
+                        </span>
+                        <span className="mt-1 block text-xs text-muted">{card.hint}</span>
+                      </div>
                     </motion.div>
                   );
                 })}
               </AnimatePresence>
               {pile.length === 0 ? (
                 <p className="rounded-2xl border-2 border-dashed border-border/60 p-5 text-sm text-muted">
-                  Alle Bausteine sind eingedockt.
+                  Alle Bausteine liegen im Feld.
                 </p>
               ) : null}
             </div>
           </div>
 
           <div className="space-y-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Board · 3 Slots</p>
-            <div className="space-y-5">
-              {slots.map((occupantKey, slotIndex) => {
-                const occupant = occupantKey ? CARD_BY_KEY.get(occupantKey) : null;
-                const isHovered = dragOverSlot === slotIndex;
-
-                const acceptsDrag =
-                  dragPayload !== null &&
-                  (dragPayload.from === 'slot' || occupant === null || occupant === undefined);
-
-                const dragHandlers = {
-                  onDragOver: (event: DragEvent<HTMLDivElement>) => {
-                    if (!acceptsDrag) return;
-                    event.preventDefault();
-                    setDragOverSlot(slotIndex);
-                  },
-                  onDragLeave: () => setDragOverSlot((current) => (current === slotIndex ? null : current)),
-                  onDrop: (event: DragEvent<HTMLDivElement>) => {
-                    event.preventDefault();
-                    if (dragPayload) placeInSlot(slotIndex, dragPayload);
-                    resetDragState();
-                  },
-                };
-
-                if (!occupant) {
-                  return (
-                    <div
-                      key={slotIndex}
-                      data-slot-index={slotIndex}
-                      {...dragHandlers}
-                      onClick={() => handleSlotClick(slotIndex)}
-                      className={`relative cursor-pointer rounded-2xl border-2 border-dashed py-4 pl-8 pr-5 ${
-                        isHovered || selectedKey
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border/60'
-                      }`}
-                    >
-                      <span
-                        aria-hidden
-                        className={`absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 border-dashed bg-bg ${
-                          isHovered || selectedKey ? 'border-primary' : 'border-border/60'
-                        }`}
-                      />
-                      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                        Slot {slotIndex + 1}
-                      </span>
-                    </div>
-                  );
-                }
-
-                const Icon = occupant.icon;
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">
+                Feld · 5×6
+              </p>
+              <p className="text-xs font-semibold text-muted">{dockedKeys.length} / 6 platziert</p>
+            </div>
+            <div
+              className="mx-auto grid w-full max-w-xl gap-1.5"
+              style={{
+                gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))`,
+                gridTemplateRows: `repeat(${GRID_ROWS}, minmax(0, 1fr))`,
+                aspectRatio: `${GRID_COLS} / ${GRID_ROWS}`,
+              }}
+            >
+              {Array.from({ length: GRID_ROWS * GRID_COLS }).map((_, index) => {
+                const row = Math.floor(index / GRID_COLS);
+                const col = index % GRID_COLS;
                 return (
-                  <motion.div
-                    key={slotIndex}
-                    data-slot-index={slotIndex}
-                    layoutId={`card-${occupant.key}`}
-                    layout
-                    draggable
-                    onDragStart={(event: unknown) => {
-                      const dragEvent = event as DragEvent<HTMLDivElement>;
-                      dragEvent.dataTransfer.setData('text/plain', occupant.key);
-                      dragEvent.dataTransfer.effectAllowed = 'move';
-                      setDragPayload({ key: occupant.key, from: 'slot', slotIndex });
-                    }}
-                    onDragEnd={resetDragState}
-                    {...dragHandlers}
-                    onClick={() => handleSlotClick(slotIndex)}
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                    className={`relative block w-full cursor-grab select-none rounded-2xl border-2 border-border bg-surface py-4 pl-8 pr-10 text-left hover:border-primary active:cursor-grabbing focus-ring ${
-                      isHovered ? 'ring-2 ring-primary/40' : ''
+                  <div
+                    key={`ph-${row}-${col}`}
+                    style={{ gridColumn: col + 1, gridRow: row + 1 }}
+                    role={selectedKey ? 'button' : undefined}
+                    tabIndex={selectedKey ? 0 : undefined}
+                    onDragOver={handleCellDragOver(row, col)}
+                    onDrop={handleCellDrop(row, col)}
+                    onClick={() => handleCellClick(row, col)}
+                    onKeyDown={selectedKey ? activateOnKey(() => handleCellClick(row, col)) : undefined}
+                    className={`rounded-lg border border-dashed border-border/50 bg-bg/40 ${
+                      selectedKey ? 'cursor-pointer hover:border-primary hover:bg-primary/5' : ''
                     }`}
-                  >
-                    <span
-                      aria-hidden
-                      className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 border-border bg-surface"
-                    />
-                    <span className="flex items-center gap-2.5">
-                      <Icon className="h-4 w-4 shrink-0 text-primary" />
-                      <span className="font-semibold text-apptext">{occupant.label}</span>
-                    </span>
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`${occupant.label} entfernen`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        removeFromSlot(slotIndex);
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.stopPropagation();
-                          event.preventDefault();
-                          removeFromSlot(slotIndex);
-                        }
-                      }}
-                      className="absolute right-3 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-muted hover:bg-border/60 hover:text-apptext focus-ring"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </span>
-                  </motion.div>
+                  />
                 );
               })}
+
+              <AnimatePresence>
+                {placements.map((placement) => {
+                  const card = CARD_BY_KEY.get(placement.key);
+                  if (!card) return null;
+                  const Icon = card.icon;
+                  return card.shape.map(([dr, dc], index) => {
+                    const row = placement.row + dr;
+                    const col = placement.col + dc;
+                    return (
+                      <motion.div
+                        key={`${placement.key}-${index}`}
+                        layout
+                        draggable
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${card.label} zurück in den Stapel legen`}
+                        style={{ gridColumn: col + 1, gridRow: row + 1 }}
+                        onDragStart={handlePieceDragStart(placement.key, dr, dc)}
+                        onDragEnd={resetDragState}
+                        onDragOver={handleCellDragOver(row, col)}
+                        onDrop={handleCellDrop(row, col)}
+                        onClick={() => removeFromGrid(placement.key)}
+                        onKeyDown={activateOnKey(() => removeFromGrid(placement.key))}
+                        initial={{ opacity: 0, scale: 0.7 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.7 }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                        className={`flex cursor-grab items-center justify-center rounded-lg shadow-sm active:cursor-grabbing focus-ring ${TONE[card.key]}`}
+                      >
+                        {index === 0 ? <Icon className="h-4 w-4 sm:h-5 sm:w-5" /> : null}
+                      </motion.div>
+                    );
+                  });
+                })}
+              </AnimatePresence>
+
+              {preview
+                ? preview.cells
+                    .filter(([r, c]) => r >= 0 && r < GRID_ROWS && c >= 0 && c < GRID_COLS)
+                    .map(([r, c], index) => (
+                      <div
+                        key={`preview-${index}`}
+                        style={{ gridColumn: c + 1, gridRow: r + 1 }}
+                        className={`pointer-events-none rounded-lg ring-2 ${
+                          previewValid ? 'bg-primary/20 ring-primary' : 'bg-rose-500/20 ring-rose-500'
+                        }`}
+                      />
+                    ))
+                : null}
             </div>
           </div>
 
@@ -463,9 +582,6 @@ export default function PuzzleLayout() {
                       return (
                         <motion.div
                           key={key}
-                          ref={(el) => {
-                            sectionRefs.current[key] = el;
-                          }}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -8 }}
@@ -491,9 +607,9 @@ export default function PuzzleLayout() {
                     exit={{ opacity: 0 }}
                     className="flex h-full min-h-[16rem] flex-col items-center justify-center gap-2 text-center"
                   >
-                    <p className="font-medium text-apptext">Noch nichts angedockt.</p>
+                    <p className="font-medium text-apptext">Noch nichts platziert.</p>
                     <p className="max-w-xs text-sm text-muted">
-                      Zieh links einen Baustein auf einen Slot, um loszulegen.
+                      Zieh links einen Baustein ins Feld, um loszulegen.
                     </p>
                   </motion.div>
                 )}
