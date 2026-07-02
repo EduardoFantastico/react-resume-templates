@@ -18,7 +18,7 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
-import { useState, type DragEvent } from 'react';
+import { useRef, useState, type DragEvent } from 'react';
 
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
@@ -49,6 +49,8 @@ const CARDS: CardMeta[] = [
 ];
 
 const CARD_BY_KEY = new Map(CARDS.map((card) => [card.key, card]));
+
+const SLOT_COUNT = 3;
 
 function PuzzlePanel({ cardKey }: { cardKey: CardKey }) {
   const { personal, skills, experience, education, projects, certifications, languages } = cvData;
@@ -201,16 +203,19 @@ function PuzzlePanel({ cardKey }: { cardKey: CardKey }) {
  * Renders the puzzle variant: real drag-and-drop blocks that plug into board slots and reveal content on the right.
  */
 export default function PuzzleLayout() {
-  const [slots, setSlots] = useState<(CardKey | null)[]>(() => CARDS.map(() => null));
+  const [slots, setSlots] = useState<(CardKey | null)[]>(() => Array(SLOT_COUNT).fill(null));
   const [selectedKey, setSelectedKey] = useState<CardKey | null>(null);
-  const [activeKey, setActiveKey] = useState<CardKey | null>(null);
   const [dragPayload, setDragPayload] = useState<DragPayload | null>(null);
   const [dragOverSlot, setDragOverSlot] = useState<number | null>(null);
   const [dragOverPile, setDragOverPile] = useState(false);
+  const sectionRefs = useRef<Partial<Record<CardKey, HTMLDivElement | null>>>({});
 
   const dockedKeys = slots.filter((key): key is CardKey => key !== null);
   const pile = CARDS.filter((card) => !dockedKeys.includes(card.key));
-  const activeCard = activeKey ? (CARD_BY_KEY.get(activeKey) ?? null) : null;
+
+  const scrollToCard = (key: CardKey) => {
+    sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const placeInSlot = (slotIndex: number, payload: DragPayload) => {
     setSlots((prev) => {
@@ -226,12 +231,10 @@ export default function PuzzleLayout() {
       }
       return next;
     });
-    setActiveKey(payload.key);
   };
 
   const removeFromSlot = (slotIndex: number) => {
     setSlots((prev) => prev.map((key, index) => (index === slotIndex ? null : key)));
-    setActiveKey((current) => (slots[slotIndex] === current ? null : current));
   };
 
   const handlePileCardClick = (key: CardKey) => {
@@ -241,7 +244,7 @@ export default function PuzzleLayout() {
   const handleSlotClick = (slotIndex: number) => {
     const occupant = slots[slotIndex];
     if (occupant) {
-      setActiveKey(occupant);
+      scrollToCard(occupant);
       return;
     }
     if (selectedKey) {
@@ -265,8 +268,9 @@ export default function PuzzleLayout() {
             Setz dir mein Profil selbst zusammen
           </h1>
           <p className="mt-3 leading-7 text-muted">
-            Zieh einen Baustein auf einen freien Slot im Board, um ihn einzudocken — oder tippe erst
-            den Baustein und dann einen Slot an. Der Inhalt erscheint rechts.
+            Zieh einen Baustein auf einen der 3 freien Slots im Board, um ihn einzudocken — oder tippe
+            erst den Baustein und dann einen Slot an. Der Inhalt erscheint rechts, alle angedockten
+            Bausteine gemeinsam im Menü.
           </p>
         </header>
 
@@ -339,12 +343,11 @@ export default function PuzzleLayout() {
           </div>
 
           <div className="space-y-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Board</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Board · 3 Slots</p>
             <div className="space-y-5">
               {slots.map((occupantKey, slotIndex) => {
                 const occupant = occupantKey ? CARD_BY_KEY.get(occupantKey) : null;
                 const isHovered = dragOverSlot === slotIndex;
-                const isActive = activeKey === occupantKey;
 
                 const acceptsDrag =
                   dragPayload !== null &&
@@ -410,15 +413,13 @@ export default function PuzzleLayout() {
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                    className={`relative block w-full cursor-grab select-none rounded-2xl border-2 py-4 pl-8 pr-10 text-left transition-colors active:cursor-grabbing focus-ring ${
-                      isActive ? 'border-primary bg-primary/10' : 'border-border bg-surface hover:border-primary'
-                    } ${isHovered ? 'ring-2 ring-primary/40' : ''}`}
+                    className={`relative block w-full cursor-grab select-none rounded-2xl border-2 border-border bg-surface py-4 pl-8 pr-10 text-left transition-colors hover:border-primary active:cursor-grabbing focus-ring ${
+                      isHovered ? 'ring-2 ring-primary/40' : ''
+                    }`}
                   >
                     <span
                       aria-hidden
-                      className={`absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 ${
-                        isActive ? 'border-primary bg-primary/10' : 'border-border bg-surface'
-                      }`}
+                      className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 border-border bg-surface"
                     />
                     <span className="flex items-center gap-2.5">
                       <Icon className="h-4 w-4 shrink-0 text-primary" />
@@ -449,45 +450,39 @@ export default function PuzzleLayout() {
             </div>
           </div>
 
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Menü</p>
             <div className="mt-5 min-h-[20rem] rounded-3xl border border-border bg-surface p-6 sm:p-8">
-              {dockedKeys.length > 1 ? (
-                <div className="mb-6 flex flex-wrap gap-2 border-b border-border pb-6">
-                  {slots.map((key, index) => {
-                    if (!key) return null;
-                    const card = CARD_BY_KEY.get(key);
-                    if (!card) return null;
-                    const Icon = card.icon;
-                    return (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setActiveKey(key)}
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors focus-ring ${
-                          activeKey === key
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-border bg-bg text-apptext hover:border-primary'
-                        }`}
-                      >
-                        <Icon className="h-3.5 w-3.5" />
-                        {card.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
-              <AnimatePresence mode="wait">
-                {activeCard ? (
-                  <motion.div
-                    key={activeCard.key}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    <PuzzlePanel cardKey={activeCard.key} />
-                  </motion.div>
+              <AnimatePresence initial={false}>
+                {dockedKeys.length > 0 ? (
+                  <div className="space-y-8">
+                    {dockedKeys.map((key, index) => {
+                      const card = CARD_BY_KEY.get(key);
+                      if (!card) return null;
+                      const Icon = card.icon;
+                      return (
+                        <motion.div
+                          key={key}
+                          ref={(el) => {
+                            sectionRefs.current[key] = el;
+                          }}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.25 }}
+                          className={index > 0 ? 'border-t border-border pt-8' : ''}
+                        >
+                          <div className="mb-4 flex items-center gap-2.5">
+                            <Icon className="h-4 w-4 shrink-0 text-primary" />
+                            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-apptext">
+                              {card.label}
+                            </h3>
+                          </div>
+                          <PuzzlePanel cardKey={card.key} />
+                        </motion.div>
+                      );
+                    })}
+                  </div>
                 ) : (
                   <motion.div
                     key="empty"
