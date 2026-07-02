@@ -12,6 +12,7 @@ import CreativeLayout from '@/layouts/variants/CreativeLayout';
 import MinimalLayout from '@/layouts/variants/MinimalLayout';
 import PuzzleLayout from '@/layouts/variants/PuzzleLayout';
 import SidebarLayout from '@/layouts/variants/SidebarLayout';
+import TerminalLayout from '@/layouts/variants/TerminalLayout';
 import type { LayoutNavItem } from '@/types/cv.types';
 
 const NAV_ITEMS: LayoutNavItem[] = [
@@ -19,6 +20,7 @@ const NAV_ITEMS: LayoutNavItem[] = [
   { label: 'Sidebar', path: '/sidebar' },
   { label: 'Creative', path: '/creative' },
   { label: 'Puzzle', path: '/puzzle' },
+  { label: 'Terminal', path: '/terminal' },
 ];
 
 /**
@@ -52,6 +54,7 @@ export function AppRouter() {
             <Route path="/sidebar" element={<SidebarLayout />} />
             <Route path="/creative" element={<CreativeLayout />} />
             <Route path="/puzzle" element={<PuzzleLayout />} />
+            <Route path="/terminal" element={<TerminalLayout />} />
             <Route path="*" element={<Navigate replace to="/minimal" />} />
           </Routes>
         </motion.div>
