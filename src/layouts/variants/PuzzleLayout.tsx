@@ -385,22 +385,25 @@ export default function PuzzleLayout() {
 
   return (
     <BaseLayout variant="puzzle" fullBleed>
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <header className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Puzzle-Lebenslauf</p>
-          <h1 className="mt-3 font-display text-3xl font-bold text-apptext sm:text-4xl">
-            Setz dir mein Profil selbst zusammen
-          </h1>
-          <p className="mt-3 leading-7 text-muted">
-            Zieh die sechs Pentomino-Bausteine ins 5×6-Feld. Jeder Baustein zeigt rechts im Menü
-            seinen Inhalt, sobald er im Feld liegt. Mit etwas Tüfteln passen alle sechs
-            überlappungsfrei zusammen — du kannst sie aber auch einfach frei hin und her ziehen.
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8 lg:py-5">
+        <header className="max-w-3xl">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
+              Puzzle-Lebenslauf
+            </p>
+            <h1 className="font-display text-xl font-bold text-apptext sm:text-2xl">
+              Setz dir mein Profil selbst zusammen
+            </h1>
+          </div>
+          <p className="mt-1 text-xs leading-5 text-muted sm:text-sm">
+            Zieh die Pentomino-Bausteine ins 5×6-Feld — alle sechs passen überlappungsfrei zusammen,
+            du kannst sie aber auch frei hin und her ziehen. Der Inhalt erscheint im Menü darunter.
           </p>
         </header>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)_minmax(0,360px)]">
+        <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,250px)_minmax(0,1fr)]">
           <div
-            className={`space-y-5 rounded-3xl p-1 transition-colors ${
+            className={`flex flex-col rounded-3xl p-1 transition-colors ${
               dragOverPile ? 'bg-primary/5 ring-2 ring-primary/40' : ''
             }`}
             onDragOver={(event) => {
@@ -415,8 +418,15 @@ export default function PuzzleLayout() {
               resetDragState();
             }}
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Bausteine</p>
-            <div className="space-y-4">
+            <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.24em] text-muted">
+              Bausteine
+            </p>
+            {/* Row count tracks the remaining pile so items grow to fill the
+                column's full height — kept equal to the grid's height below. */}
+            <div
+              className="mt-2 grid flex-1 gap-2"
+              style={{ gridTemplateRows: `repeat(${Math.max(pile.length, 1)}, minmax(0, 1fr))` }}
+            >
               <AnimatePresence>
                 {pile.map((card) => {
                   const { rows, cols } = boundingSize(card.shape);
@@ -440,49 +450,51 @@ export default function PuzzleLayout() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      className={`flex cursor-grab items-center gap-3 rounded-2xl border-2 bg-surface p-4 text-left shadow-soft active:cursor-grabbing focus-ring ${
+                      className={`flex min-h-0 cursor-grab items-center gap-2.5 rounded-xl border-2 bg-surface px-3 text-left shadow-soft active:cursor-grabbing focus-ring ${
                         isSelected ? 'border-primary bg-primary/10' : 'border-border hover:border-primary'
                       }`}
                     >
-                      <div
-                        className="grid shrink-0 gap-[3px]"
-                        style={{
-                          gridTemplateColumns: `repeat(${cols}, 13px)`,
-                          gridTemplateRows: `repeat(${rows}, 13px)`,
-                        }}
-                      >
-                        {Array.from({ length: rows * cols }).map((_, index) => {
-                          const r = Math.floor(index / cols);
-                          const c = index % cols;
-                          const filled = card.shape.some(([sr, sc]) => sr === r && sc === c);
-                          return (
-                            <span
-                              key={index}
-                              className={`rounded-[3px] ${filled ? TONE[card.key] : ''}`}
-                            />
-                          );
-                        })}
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+                        <div
+                          className="grid gap-px"
+                          style={{
+                            gridTemplateColumns: `repeat(${cols}, 6px)`,
+                            gridTemplateRows: `repeat(${rows}, 6px)`,
+                          }}
+                        >
+                          {Array.from({ length: rows * cols }).map((_, index) => {
+                            const r = Math.floor(index / cols);
+                            const c = index % cols;
+                            const filled = card.shape.some(([sr, sc]) => sr === r && sc === c);
+                            return (
+                              <span
+                                key={index}
+                                className={`rounded-[1px] ${filled ? TONE[card.key] : ''}`}
+                              />
+                            );
+                          })}
+                        </div>
                       </div>
                       <div className="min-w-0">
-                        <span className="flex items-center gap-2">
-                          <Icon className="h-4 w-4 shrink-0 text-primary" />
-                          <span className="truncate font-semibold text-apptext">{card.label}</span>
+                        <span className="flex items-center gap-1.5">
+                          <Icon className="h-3.5 w-3.5 shrink-0 text-primary" />
+                          <span className="truncate text-sm font-semibold text-apptext">{card.label}</span>
                         </span>
-                        <span className="mt-1 block text-xs text-muted">{card.hint}</span>
+                        <span className="mt-0.5 block truncate text-xs text-muted">{card.hint}</span>
                       </div>
                     </motion.div>
                   );
                 })}
               </AnimatePresence>
               {pile.length === 0 ? (
-                <p className="rounded-2xl border-2 border-dashed border-border/60 p-5 text-sm text-muted">
+                <p className="flex items-center justify-center rounded-xl border-2 border-dashed border-border/60 p-4 text-center text-sm text-muted">
                   Alle Bausteine liegen im Feld.
                 </p>
               ) : null}
             </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">
                 Feld · 5×6
@@ -490,8 +502,14 @@ export default function PuzzleLayout() {
               <p className="text-xs font-semibold text-muted">{dockedKeys.length} / 6 platziert</p>
             </div>
             <div
-              className="mx-auto grid w-full max-w-xl gap-1.5"
+              className="mx-auto grid gap-1"
               style={{
+                // Width capped by (in order) the column's own space, an absolute
+                // ceiling, and 38dvh scaled to the 6:5 aspect ratio — so the
+                // whole board (and its height) shrinks to fit short viewports
+                // instead of pushing the menu below the fold. The pile column
+                // stretches to match this height (see the grid row above).
+                width: 'min(100%, 26rem, calc(38dvh * 1.2))',
                 gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(${GRID_ROWS}, minmax(0, 1fr))`,
                 aspectRatio: `${GRID_COLS} / ${GRID_ROWS}`,
@@ -568,53 +586,53 @@ export default function PuzzleLayout() {
                 : null}
             </div>
           </div>
+        </div>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Menü</p>
-            <div className="mt-5 min-h-[20rem] rounded-3xl border border-border bg-surface p-6 sm:p-8">
-              <AnimatePresence initial={false}>
-                {dockedKeys.length > 0 ? (
-                  <div className="space-y-8">
-                    {dockedKeys.map((key, index) => {
-                      const card = CARD_BY_KEY.get(key);
-                      if (!card) return null;
-                      const Icon = card.icon;
-                      return (
-                        <motion.div
-                          key={key}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.25 }}
-                          className={index > 0 ? 'border-t border-border pt-8' : ''}
-                        >
-                          <div className="mb-4 flex items-center gap-2.5">
-                            <Icon className="h-4 w-4 shrink-0 text-primary" />
-                            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-apptext">
-                              {card.label}
-                            </h3>
-                          </div>
-                          <PuzzlePanel cardKey={card.key} />
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <motion.div
-                    key="empty"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex h-full min-h-[16rem] flex-col items-center justify-center gap-2 text-center"
-                  >
-                    <p className="font-medium text-apptext">Noch nichts platziert.</p>
-                    <p className="max-w-xs text-sm text-muted">
-                      Zieh links einen Baustein ins Feld, um loszulegen.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+        <div className="mt-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted">Menü</p>
+          <div className="mt-5 min-h-[16rem] rounded-3xl border border-border bg-surface p-6 sm:p-8">
+            <AnimatePresence initial={false}>
+              {dockedKeys.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {dockedKeys.map((key) => {
+                    const card = CARD_BY_KEY.get(key);
+                    if (!card) return null;
+                    const Icon = card.icon;
+                    return (
+                      <motion.div
+                        key={key}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.25 }}
+                        className="rounded-2xl border border-border bg-bg p-5"
+                      >
+                        <div className="mb-4 flex items-center gap-2.5">
+                          <Icon className="h-4 w-4 shrink-0 text-primary" />
+                          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-apptext">
+                            {card.label}
+                          </h3>
+                        </div>
+                        <PuzzlePanel cardKey={card.key} />
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex h-full min-h-[14rem] flex-col items-center justify-center gap-2 text-center"
+                >
+                  <p className="font-medium text-apptext">Noch nichts platziert.</p>
+                  <p className="max-w-xs text-sm text-muted">
+                    Zieh oben einen Baustein ins Feld, um loszulegen.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
