@@ -102,9 +102,9 @@ export function HamburgerMenu({ navItems }: HamburgerMenuProps) {
             <section className="space-y-4 rounded-3xl border border-border bg-surface p-4">
               <div>
                 <p className="text-sm font-semibold text-apptext">Farbthema</p>
-                <p className="text-xs text-muted">Fünf kombinierbare Theme-Sets.</p>
+                <p className="text-xs text-muted">Zwölf kombinierbare Theme-Sets.</p>
               </div>
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
                 {THEME_DEFINITIONS.map((definition) => {
                   const isActive = definition.name === theme;
 

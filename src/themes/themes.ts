@@ -11,6 +11,12 @@ export const DEFAULT_THEME: ThemeName = 'ink';
 
 export const THEME_DEFINITIONS: ThemeDefinition[] = [
   {
+    name: 'ink',
+    label: 'Ink',
+    swatch: '#111827',
+    description: 'Zeitloses Graphit-Schwarz mit klarem Blauakzent.',
+  },
+  {
     name: 'forest',
     label: 'Forest',
     swatch: '#166534',
@@ -39,6 +45,42 @@ export const THEME_DEFINITIONS: ThemeDefinition[] = [
     label: 'Sand',
     swatch: '#b45309',
     description: 'Heller, warmer Ton mit editorialem Charakter.',
+  },
+  {
+    name: 'bubblegum',
+    label: 'Bubblegum',
+    swatch: '#db2777',
+    description: 'All-in auf Pink – verspielt, mutig und knallig.',
+  },
+  {
+    name: 'neon',
+    label: 'Neon',
+    swatch: '#a855f7',
+    description: 'Elektrisches Lila trifft Cyan – Cyberpunk-Vibe.',
+  },
+  {
+    name: 'rosegold',
+    label: 'Rosegold',
+    swatch: '#b76e79',
+    description: 'Edles Roségold mit warmem, eleganten Glanz.',
+  },
+  {
+    name: 'mint',
+    label: 'Mint',
+    swatch: '#0d9488',
+    description: 'Frisches Minzgrün mit klarer, luftiger Wirkung.',
+  },
+  {
+    name: 'lavender',
+    label: 'Lavender',
+    swatch: '#8b5cf6',
+    description: 'Sanftes Fliederviolett mit ruhig-kreativer Note.',
+  },
+  {
+    name: 'gold',
+    label: 'Gold',
+    swatch: '#b8860b',
+    description: 'Schwarz-Gold-Luxus mit starkem Statement.',
   },
 ];
 

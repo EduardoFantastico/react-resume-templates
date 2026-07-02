@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 :root,
+[data-theme='ink'] {
+  --color-primary: #111827;
+  --color-primary-light: #9ca3af;
+  --color-accent: #2563eb;
+  --color-bg: #f9fafb;
+  --color-surface: #f1f2f4;
+  --color-text: #111827;
+  --color-text-muted: #57606a;
+  --color-border: #e2e4e8;
+}
+
 [data-theme='forest'] {
   --color-primary: #166534;
   --color-primary-light: #4ade80;
@@ -56,6 +67,72 @@
   --color-text: #3f2a16;
   --color-text-muted: #6b5b49;
   --color-border: #ead9b8;
+}
+
+[data-theme='bubblegum'] {
+  --color-primary: #db2777;
+  --color-primary-light: #f9a8d4;
+  --color-accent: #d946ef;
+  --color-bg: #fff5fb;
+  --color-surface: #ffe4f3;
+  --color-text: #500724;
+  --color-text-muted: #9d4074;
+  --color-border: #fbcfe8;
+}
+
+[data-theme='neon'] {
+  --color-primary: #a855f7;
+  --color-primary-light: #d8b4fe;
+  --color-accent: #06b6d4;
+  --color-bg: #faf5ff;
+  --color-surface: #f3e8ff;
+  --color-text: #2e1065;
+  --color-text-muted: #6b5b95;
+  --color-border: #e9d5ff;
+}
+
+[data-theme='rosegold'] {
+  --color-primary: #b76e79;
+  --color-primary-light: #f3d4c8;
+  --color-accent: #d4af37;
+  --color-bg: #fff9f6;
+  --color-surface: #fdf0ea;
+  --color-text: #4a2c2a;
+  --color-text-muted: #8a6a63;
+  --color-border: #f0dcd3;
+}
+
+[data-theme='mint'] {
+  --color-primary: #0d9488;
+  --color-primary-light: #5eead4;
+  --color-accent: #22c55e;
+  --color-bg: #f0fdfa;
+  --color-surface: #e6fbf5;
+  --color-text: #134e4a;
+  --color-text-muted: #4b7d74;
+  --color-border: #ccf3e9;
+}
+
+[data-theme='lavender'] {
+  --color-primary: #8b5cf6;
+  --color-primary-light: #ddd6fe;
+  --color-accent: #6366f1;
+  --color-bg: #f8f7ff;
+  --color-surface: #efeaff;
+  --color-text: #2e1a5e;
+  --color-text-muted: #6a5f92;
+  --color-border: #e3dbfb;
+}
+
+[data-theme='gold'] {
+  --color-primary: #b8860b;
+  --color-primary-light: #f5d67d;
+  --color-accent: #1c1c1c;
+  --color-bg: #fffdf5;
+  --color-surface: #faf3df;
+  --color-text: #2b2410;
+  --color-text-muted: #6b5f3f;
+  --color-border: #ecdfb0;
 }
 
 .dark {

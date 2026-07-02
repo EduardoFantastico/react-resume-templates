@@ -3,7 +3,20 @@ import type { ReactNode } from 'react';
 export const LAYOUT_VARIANTS = ['minimal', 'sidebar', 'creative', 'puzzle'] as const;
 export type LayoutVariant = (typeof LAYOUT_VARIANTS)[number];
 
-export const THEME_NAMES = ['ink', 'forest', 'ocean', 'plum', 'ember', 'sand'] as const;
+export const THEME_NAMES = [
+  'ink',
+  'forest',
+  'ocean',
+  'plum',
+  'ember',
+  'sand',
+  'bubblegum',
+  'neon',
+  'rosegold',
+  'mint',
+  'lavender',
+  'gold',
+] as const;
 export type ThemeName = (typeof THEME_NAMES)[number];
 
 export type SkillCategory = 'language' | 'framework' | 'tool' | 'platform' | 'other';
