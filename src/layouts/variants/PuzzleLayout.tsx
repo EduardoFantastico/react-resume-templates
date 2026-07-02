@@ -315,13 +315,13 @@ export default function PuzzleLayout() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      className={`group relative block w-full cursor-grab select-none rounded-2xl border-2 bg-surface py-4 pl-5 pr-8 text-left shadow-soft transition-colors active:cursor-grabbing focus-ring ${
+                      className={`group relative block w-full cursor-grab select-none rounded-2xl border-2 bg-surface py-4 pl-5 pr-8 text-left shadow-soft active:cursor-grabbing focus-ring ${
                         isSelected ? 'border-primary bg-primary/10' : 'border-border hover:border-primary'
                       }`}
                     >
                       <span
                         aria-hidden
-                        className={`absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 bg-surface transition-colors ${
+                        className={`absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-2 bg-surface ${
                           isSelected ? 'border-primary' : 'border-border group-hover:border-primary'
                         }`}
                       />
@@ -374,7 +374,7 @@ export default function PuzzleLayout() {
                       data-slot-index={slotIndex}
                       {...dragHandlers}
                       onClick={() => handleSlotClick(slotIndex)}
-                      className={`relative cursor-pointer rounded-2xl border-2 border-dashed py-4 pl-8 pr-5 transition-colors ${
+                      className={`relative cursor-pointer rounded-2xl border-2 border-dashed py-4 pl-8 pr-5 ${
                         isHovered || selectedKey
                           ? 'border-primary bg-primary/5'
                           : 'border-border/60'
@@ -413,7 +413,7 @@ export default function PuzzleLayout() {
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                    className={`relative block w-full cursor-grab select-none rounded-2xl border-2 border-border bg-surface py-4 pl-8 pr-10 text-left transition-colors hover:border-primary active:cursor-grabbing focus-ring ${
+                    className={`relative block w-full cursor-grab select-none rounded-2xl border-2 border-border bg-surface py-4 pl-8 pr-10 text-left hover:border-primary active:cursor-grabbing focus-ring ${
                       isHovered ? 'ring-2 ring-primary/40' : ''
                     }`}
                   >
@@ -440,7 +440,7 @@ export default function PuzzleLayout() {
                           removeFromSlot(slotIndex);
                         }
                       }}
-                      className="absolute right-3 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-muted transition-colors hover:bg-border/60 hover:text-apptext focus-ring"
+                      className="absolute right-3 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-muted hover:bg-border/60 hover:text-apptext focus-ring"
                     >
                       <X className="h-3.5 w-3.5" />
                     </span>
