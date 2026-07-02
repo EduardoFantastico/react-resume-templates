@@ -20,14 +20,14 @@ export const cvData: CVData = {
     },
   },
   skills: [
-    { name: 'TypeScript', level: 80, category: 'language' },
-    { name: 'React', level: 78, category: 'framework' },
-    { name: 'HTML & CSS', level: 88, category: 'language' },
-    { name: 'Tailwind CSS', level: 84, category: 'tool' },
-    { name: 'Node.js', level: 70, category: 'platform' },
-    { name: 'SQL', level: 66, category: 'language' },
-    { name: 'Git & GitHub', level: 82, category: 'tool' },
-    { name: 'Figma', level: 58, category: 'other' },
+    { name: 'TypeScript', category: 'language' },
+    { name: 'React', category: 'framework' },
+    { name: 'HTML & CSS', category: 'language' },
+    { name: 'Tailwind CSS', category: 'tool' },
+    { name: 'Node.js', category: 'platform' },
+    { name: 'SQL', category: 'language' },
+    { name: 'Git & GitHub', category: 'tool' },
+    { name: 'Figma', category: 'other' },
   ],
   experience: [
     {
