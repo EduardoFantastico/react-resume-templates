@@ -22,8 +22,8 @@ export default function BaseLayout({
     <motion.main
       data-layout={variant}
       className={[
-        'mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8',
-        fullBleed ? 'max-w-none px-0 py-0' : '',
+        'mx-auto w-full',
+        fullBleed ? 'max-w-none' : 'max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8',
         className,
       ].join(' ')}
       initial={shouldReduceMotion ? false : { opacity: 0 }}

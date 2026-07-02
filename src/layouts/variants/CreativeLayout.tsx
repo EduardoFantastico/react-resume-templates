@@ -19,7 +19,7 @@ export default function CreativeLayout() {
   return (
     <BaseLayout variant="creative" fullBleed>
       <section
-        className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-6 py-28 sm:px-12 lg:px-20"
+        className="relative flex min-h-[calc(100svh-5rem)] w-full flex-col justify-center overflow-hidden px-6 py-28 sm:px-12 lg:px-20"
         style={{
           background:
             'linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 92%, black) 0%, var(--color-primary) 45%, var(--color-accent) 100%)',
