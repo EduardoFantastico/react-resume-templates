@@ -11,7 +11,6 @@ const SOCIAL_LABELS: Record<string, string> = {
   linkedin: 'LinkedIn',
   xing: 'Xing',
   x: 'X',
-  website: 'Web',
 };
 
 /**

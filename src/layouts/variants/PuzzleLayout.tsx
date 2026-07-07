@@ -112,8 +112,8 @@ const TONE: Record<CardKey, string> = {
   erfahrung: 'bg-accent text-white',
   ausbildung: 'bg-[color-mix(in_srgb,var(--color-primary)_70%,transparent)] text-white',
   skills: 'bg-[color-mix(in_srgb,var(--color-accent)_70%,transparent)] text-white',
-  projekte: 'bg-primaryLight text-apptext',
-  kontakt: 'bg-[color-mix(in_srgb,var(--color-primary)_30%,transparent)] text-apptext',
+  projekte: 'bg-primaryLight text-slate-900',
+  kontakt: 'bg-[color-mix(in_srgb,var(--color-primary)_55%,transparent)] text-white',
 };
 
 function boundingSize(shape: readonly Cell[]) {
@@ -454,12 +454,13 @@ export default function PuzzleLayout() {
                         isSelected ? 'border-primary bg-primary/10' : 'border-border hover:border-primary'
                       }`}
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center">
                         <div
-                          className="grid gap-px"
+                          className="grid"
                           style={{
-                            gridTemplateColumns: `repeat(${cols}, 6px)`,
-                            gridTemplateRows: `repeat(${rows}, 6px)`,
+                            gridTemplateColumns: `repeat(${cols}, 8px)`,
+                            gridTemplateRows: `repeat(${rows}, 8px)`,
+                            gap: '2px',
                           }}
                         >
                           {Array.from({ length: rows * cols }).map((_, index) => {
@@ -469,7 +470,11 @@ export default function PuzzleLayout() {
                             return (
                               <span
                                 key={index}
-                                className={`rounded-[1px] ${filled ? TONE[card.key] : ''}`}
+                                className={`rounded-[2px] ${
+                                  filled
+                                    ? TONE[card.key]
+                                    : 'bg-[color-mix(in_srgb,var(--color-border)_45%,transparent)]'
+                                }`}
                               />
                             );
                           })}

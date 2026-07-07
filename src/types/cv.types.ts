@@ -27,7 +27,6 @@ export interface SocialLinks {
   linkedin?: string;
   xing?: string;
   x?: string;
-  website?: string;
 }
 
 export interface PersonalInfo {

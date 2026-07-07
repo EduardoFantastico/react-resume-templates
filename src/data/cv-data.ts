@@ -16,7 +16,6 @@ export const cvData: CVData = {
     social: {
       github: 'https://github.com/maxmustermann',
       linkedin: 'https://linkedin.com/in/maxmustermann',
-      website: 'https://maxmustermann.dev',
     },
   },
   skills: [
@@ -74,7 +73,6 @@ export const cvData: CVData = {
       tags: ['React', 'TypeScript', 'UX'],
       liveUrl: 'https://example.com/studyboard',
       repoUrl: 'https://github.com/maxmustermann/studyboard',
-      image: '/projects/project1.jpg',
       featured: true,
     },
     {

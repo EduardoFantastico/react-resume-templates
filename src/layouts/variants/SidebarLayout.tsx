@@ -4,7 +4,7 @@ Props summary: none; renders the shared CV content.
 Usage example: default export used by the sidebar route.
 */
 import { useState } from 'react';
-import { CalendarRange, Github, Globe, Linkedin, Mail, MapPin, MessageSquareMore, Phone, Share2 } from 'lucide-react';
+import { CalendarRange, Github, Linkedin, Mail, MapPin, MessageSquareMore, Phone, Share2 } from 'lucide-react';
 
 import BaseLayout from '@/layouts/BaseLayout';
 import { cvData } from '@/data/cv-data';
@@ -14,7 +14,6 @@ const SOCIAL_ICONS = {
   linkedin: Linkedin,
   xing: Share2,
   x: MessageSquareMore,
-  website: Globe,
 } as const;
 
 function initials(name: string) {

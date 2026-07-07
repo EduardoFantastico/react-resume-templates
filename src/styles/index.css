@@ -143,6 +143,18 @@
   --color-border: #334155;
 }
 
+/* ink's near-black --color-primary and gold's near-black --color-accent are
+   almost invisible against the shared dark-mode bg/surface above. Reuse each
+   theme's own --color-primary-light token, which already has strong contrast
+   against the dark bg/surface, in dark mode only. */
+.dark[data-theme='ink'] {
+  --color-primary: var(--color-primary-light);
+}
+
+.dark[data-theme='gold'] {
+  --color-accent: var(--color-primary-light);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

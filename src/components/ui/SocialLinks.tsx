@@ -3,7 +3,7 @@ Purpose: Presents the public profile links with clear external-link affordances.
 Props summary: social links object and optional className.
 Usage example: <SocialLinks social={cvData.personal.social} />
 */
-import { Github, Globe, Linkedin, MessageSquareMore, Share2 } from 'lucide-react';
+import { Github, Linkedin, MessageSquareMore, Share2 } from 'lucide-react';
 
 import type { SocialLinksProps } from '@/types/cv.types';
 
@@ -12,7 +12,6 @@ const ICON_MAP = {
   linkedin: Linkedin,
   xing: Share2,
   x: MessageSquareMore,
-  website: Globe,
 } as const;
 
 /**
