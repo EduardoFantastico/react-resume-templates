@@ -396,8 +396,11 @@ export default function PuzzleLayout() {
             </h1>
           </div>
           <p className="mt-1 text-xs leading-5 text-muted sm:text-sm">
-            Zieh die Pentomino-Bausteine ins 5×6-Feld — alle sechs passen überlappungsfrei zusammen,
-            du kannst sie aber auch frei hin und her ziehen. Der Inhalt erscheint im Menü darunter.
+            Ordne die sechs Pentomino-Bausteine im 5×6-Feld an — alle passen überlappungsfrei
+            zusammen, du kannst sie aber auch frei hin und her bewegen.
+            <span className="hidden pointer-fine:inline"> Zieh sie mit der Maus an ihren Platz</span>
+            <span className="hidden pointer-coarse:inline"> Tipp einen Baustein an, dann das Zielfeld</span>
+            , der Inhalt erscheint im Menü darunter.
           </p>
         </header>
 
@@ -512,9 +515,11 @@ export default function PuzzleLayout() {
                 // Width capped by (in order) the column's own space, an absolute
                 // ceiling, and 38dvh scaled to the 6:5 aspect ratio — so the
                 // whole board (and its height) shrinks to fit short viewports
-                // instead of pushing the menu below the fold. The pile column
-                // stretches to match this height (see the grid row above).
-                width: 'min(100%, 26rem, calc(38dvh * 1.2))',
+                // instead of pushing the menu below the fold. A floor of 18rem
+                // keeps cells tappable (~48px) on short landscape phones, even
+                // if that means a bit of page scroll. The pile column stretches
+                // to match this height (see the grid row above).
+                width: 'min(100%, 26rem, max(18rem, calc(38dvh * 1.2)))',
                 gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(${GRID_ROWS}, minmax(0, 1fr))`,
                 aspectRatio: `${GRID_COLS} / ${GRID_ROWS}`,

@@ -74,7 +74,7 @@ function ExternalLink({ href, children }: { href: string; children: ReactNode })
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="text-apptext underline decoration-primary underline-offset-4 hover:text-primary"
+      className="break-all text-apptext underline decoration-primary underline-offset-4 hover:text-primary"
     >
       {children}
     </a>
@@ -242,13 +242,13 @@ function ContactOutput() {
   return (
     <div className="space-y-3">
       <SectionHeading>contact.vcf</SectionHeading>
-      <div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1.5">
+      <div className="grid min-w-0 grid-cols-[max-content_1fr] gap-x-4 gap-y-1.5">
         <span className="text-muted">email</span>
         <ExternalLink href={`mailto:${personal.email}`}>{personal.email}</ExternalLink>
         <span className="text-muted">phone</span>
-        <span className="text-apptext">{personal.phone}</span>
+        <span className="break-all text-apptext">{personal.phone}</span>
         <span className="text-muted">location</span>
-        <span className="text-apptext">{personal.location}</span>
+        <span className="break-all text-apptext">{personal.location}</span>
         {social.map(([key, url]) => (
           <div key={key} className="contents">
             <span className="text-muted">{key}</span>
@@ -293,11 +293,11 @@ function HelpOutput() {
   return (
     <div className="space-y-2">
       <SectionHeading>Verfuegbare Befehle</SectionHeading>
-      <div className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1.5">
+      <div className="grid min-w-0 grid-cols-[max-content_1fr] gap-x-4 gap-y-1.5">
         {HELP_ROWS.map(([cmd, desc]) => (
           <div key={cmd} className="contents">
             <span className="font-semibold text-apptext">/{cmd}</span>
-            <span className="text-muted">{desc}</span>
+            <span className="break-words text-muted">{desc}</span>
           </div>
         ))}
       </div>
@@ -551,7 +551,7 @@ export default function TerminalLayout() {
           <div
             ref={scrollRef}
             onClick={focusInput}
-            className="min-h-0 flex-1 cursor-text space-y-3 overflow-y-auto px-4 py-4 font-mono text-sm leading-relaxed sm:px-6"
+            className="min-h-0 flex-1 cursor-text space-y-3 overflow-y-auto overflow-x-hidden px-4 py-4 font-mono text-sm leading-relaxed sm:px-6"
           >
             {entries.map((entry) => (
               <EntryRow key={entry.id} entry={entry} slug={slug} />

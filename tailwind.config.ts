@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 export default {
   darkMode: 'class',
@@ -52,5 +53,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addVariant }) => {
+      addVariant('pointer-fine', '@media (hover: hover) and (pointer: fine)');
+      addVariant('pointer-coarse', '@media (hover: none), (pointer: coarse)');
+    }),
+  ],
 } satisfies Config;

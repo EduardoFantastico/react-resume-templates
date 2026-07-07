@@ -60,8 +60,8 @@ export default function SidebarLayout() {
 
   return (
     <BaseLayout variant="sidebar" fullBleed>
-      <div className="xl:grid xl:min-h-[calc(100vh-5rem)] xl:grid-cols-[30%_70%]">
-        <aside className="space-y-8 bg-primary p-8 text-white sm:p-10 xl:sticky xl:top-20 xl:h-[calc(100vh-5rem)] xl:self-start xl:overflow-y-auto xl:p-10">
+      <div className="lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[30%_70%]">
+        <aside className="space-y-8 bg-primary p-8 text-white sm:p-10 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] lg:self-start lg:overflow-y-auto lg:p-10">
           <div className="space-y-4">
             <SidebarPortrait />
             <div>
@@ -132,7 +132,7 @@ export default function SidebarLayout() {
           </div>
         </aside>
 
-        <main className="space-y-14 px-6 py-12 sm:px-10 sm:py-16 xl:px-14 xl:py-20">
+        <main className="space-y-14 px-6 py-12 sm:px-10 sm:py-16 lg:px-14 lg:py-20">
           <section className="max-w-2xl space-y-4">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Profil</p>
             <h2 className="font-display text-3xl font-semibold text-apptext">Über mich</h2>

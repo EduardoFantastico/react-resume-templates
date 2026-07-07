@@ -32,7 +32,7 @@ export default function MinimalLayout() {
           <span className="block h-0.5 w-12 bg-primary" />
           <p className="text-lg text-muted">{personal.title}</p>
           <p className="leading-8 text-apptext">{personal.bio}</p>
-          <p className="text-sm text-muted">
+          <p className="text-sm text-muted break-words">
             {contactLine}
             {socialEntries.length > 0 ? '  —  ' : ''}
             {socialEntries.map(([key, url], index) => (

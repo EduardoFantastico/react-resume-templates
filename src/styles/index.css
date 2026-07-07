@@ -160,6 +160,7 @@
     scroll-behavior: smooth;
     color-scheme: light;
     background: var(--color-bg);
+    overflow-x: clip;
   }
 
   html.dark {

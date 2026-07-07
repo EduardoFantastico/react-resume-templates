@@ -39,7 +39,7 @@ export default function CreativeLayout() {
             {personal.title}
           </p>
           <h1
-            className="mt-6 font-display font-black uppercase leading-[0.85] text-white"
+            className="mt-6 break-words font-display font-black uppercase leading-[0.85] text-white"
             style={{ fontSize: 'clamp(4rem, 10vw, 10rem)' }}
           >
             {personal.name}
@@ -121,7 +121,7 @@ export default function CreativeLayout() {
 
         <section className="mt-16 space-y-6">
           <h2 className="font-display text-4xl font-black uppercase text-apptext">Projekte</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
               <article
                 key={project.title}
