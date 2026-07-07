@@ -4,9 +4,11 @@ Modern, client-only CV and portfolio template built with React, TypeScript, Vite
 
 ## What this project does
 
-- Presents one central CV data file that drives all layouts.
-- Ships five presentation variants: Classic, Modern, Minimal, Sidebar, and Creative.
-- Supports light/dark mode, five color themes, and responsive behavior from mobile to large desktop screens.
+- Serves as a fork-and-customize template and inspiration gallery, not a finished product: pick the variant that matches your style, delete the rest, and make it yours.
+- Includes a landing page at `/` that introduces the project to anyone who forks it.
+- Presents one central CV data file ([src/data/cv-data.ts](src/data/cv-data.ts)) that drives all layouts.
+- Ships five presentation variants: Minimal, Sidebar, Creative, Puzzle, and Terminal.
+- Supports light/dark mode, twelve color themes, and responsive behavior from mobile to large desktop screens.
 - Stays static and deployable to Vercel, GitHub Pages, or any static host.
 
 ## Getting Started
@@ -56,30 +58,40 @@ To add a new theme:
 
 Routes:
 
-- `/` redirects to `/classic`
-- `/classic`
-- `/modern`
+- `/` — landing page introducing the project (see "Reduce to a Single Variant" below to turn this into your actual portfolio)
 - `/minimal`
 - `/sidebar`
 - `/creative`
+- `/puzzle`
+- `/terminal`
 
-Each route uses the same `cvData` object but renders it with a different visual system.
+Each variant route uses the same `cvData` object but renders it with a different visual system.
+
+## Reduce to a Single Variant
+
+Most forks only need one look. To trim the project down to just one variant (e.g. only Terminal):
+
+1. Pick the variant to keep, e.g. [src/layouts/variants/TerminalLayout.tsx](src/layouts/variants/TerminalLayout.tsx).
+2. Delete the other files in [src/layouts/variants](src/layouts/variants).
+3. In [src/router/AppRouter.tsx](src/router/AppRouter.tsx), remove the unused imports, `NAV_ITEMS` entries, and `<Route>` elements — keep only the variant you're using.
+4. Optional: once you no longer need the landing page, delete [src/pages/LandingPage.tsx](src/pages/LandingPage.tsx), remove the "Start" nav item, and point the `/` route at your remaining variant directly.
+5. Check the logo link in [src/components/layout/Header.tsx](src/components/layout/Header.tsx) and the nav items in Navbar/HamburgerMenu still make sense with only one variant left.
 
 ## Adding a New Variant
 
 1. Create a new file in [src/layouts/variants](src/layouts/variants).
-2. Reuse the shared sections in [src/components/sections](src/components/sections).
+2. Reuse the shared building blocks in [src/components/ui](src/components/ui) (Avatar, Badge, SocialLinks).
 3. Add the route to [src/router/AppRouter.tsx](src/router/AppRouter.tsx).
 4. Add the nav item so it appears in the header and mobile drawer.
 
 ## Folder Overview
 
 - [src/components/layout](src/components/layout)
-- [src/components/sections](src/components/sections)
 - [src/components/ui](src/components/ui)
 - [src/data/cv-data.ts](src/data/cv-data.ts)
 - [src/hooks](src/hooks)
 - [src/layouts](src/layouts)
+- [src/pages/LandingPage.tsx](src/pages/LandingPage.tsx)
 - [src/router/AppRouter.tsx](src/router/AppRouter.tsx)
 - [src/styles/index.css](src/styles/index.css)
 - [src/themes/themes.ts](src/themes/themes.ts)

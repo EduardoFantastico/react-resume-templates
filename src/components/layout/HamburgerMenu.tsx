@@ -135,6 +135,7 @@ export function HamburgerMenu({ navItems }: HamburgerMenuProps) {
                   <NavLink
                     key={item.path}
                     to={item.path}
+                    end
                     onClick={() => setIsOpen(false)}
                     className={({ isActive }) =>
                       [
