@@ -319,8 +319,8 @@ export default function LandingPage() {
         >
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Bereit loszulegen?</h2>
           <p className="mx-auto mt-3 max-w-xl text-white/85">
-            Das Repo ist öffentlich und frei forkbar — kein Zugriff, keine Freigabe, kein Account
-            nötig.
+            Das Repo ist öffentlich, MIT-lizenziert und frei forkbar — kein Zugriff, keine
+            Freigabe, kein Account nötig.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a

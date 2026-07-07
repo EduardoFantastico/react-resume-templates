@@ -118,4 +118,12 @@ The app does not require runtime environment variables. See [.env.example](.env.
 ## Notes
 
 - The avatar path in `cv-data.ts` points to `/avatar.jpg` in `public/`, but the app still works without it because the initials fallback is built in.
-- No backend is used. All content is static and local.# react-resume-templates
+- No backend is used. All content is static and local.
+
+## License
+
+MIT — see [LICENSE](LICENSE). Fork it, strip it down, ship it as your own.
+
+## Third-Party Notices
+
+All runtime dependencies ([react](https://github.com/facebook/react), [react-dom](https://github.com/facebook/react), [react-router-dom](https://github.com/remix-run/react-router), [framer-motion](https://github.com/framer/motion), [lucide-react](https://github.com/lucide-icons/lucide)) are MIT or ISC licensed. Icons come exclusively from lucide-react — no third-party brand assets or bundled font/image files are included in this repo.
