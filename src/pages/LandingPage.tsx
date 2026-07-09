@@ -52,8 +52,7 @@ const STEPS: OnboardingStep[] = [
   },
   {
     title: 'Theme & Layout wählen',
-    description:
-      'Zwölf Farbthemen, Dark Mode und fünf Layouts im Einstellungsmenü oben rechts.',
+    description: 'Zwölf Farbthemen, Dark Mode und fünf Layouts im Einstellungsmenü oben rechts.',
     icon: Palette,
   },
   {
@@ -287,12 +286,16 @@ export default function LandingPage() {
             Zur Inspiration
           </p>
           <h2 className="font-display text-2xl font-bold text-apptext sm:text-3xl">
-            Passe die Seite an dich an
+            Mach diese Seite zu deinem Projekt
           </h2>
           <p className="max-w-2xl text-base leading-7 text-muted">
-            Diese Templates sind ein Startpunkt. Meine eigene Seite unter eddy.rip nutzt dieses
-            Repo nicht — ich habe sie komplett eigenständig gebaut. Ändere die Templates so, wie
-            du es brauchst.
+            Nutze diese Templates als Fundament und gestalte sie genau so, wie du es möchtest. Dank
+            der zentralen cv-data.ts-Datei musst du deine persönlichen Daten nur einmal pflegen -
+            alle Layouts passen sich automatisch an.
+          </p>
+          <p className="max-w-2xl text-base leading-7 text-muted">
+            Wenn du sehen willst, wie ich mein persönliches Portfolio umgesetzt habe, wirf gerne
+            einen Blick auf eddy.rip.
           </p>
           <a
             href={OWN_CV_URL}
