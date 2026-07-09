@@ -37,7 +37,7 @@ const STEPS: OnboardingStep[] = [
   {
     title: 'Repo forken oder klonen',
     description:
-      'Auf GitHub auf „Fork" klicken oder lokal per git clone kopieren. Keine Lizenzkosten, kein Backend, keine Abhängigkeit von diesem Projekt.',
+      'Auf GitHub auf „Fork" klicken oder lokal per git clone kopieren. Keine Lizenzen, kein Backend, keine Abhängigkeit von diesem Projekt.',
     icon: GitFork,
     href: `${REPO_URL}/fork`,
     linkLabel: 'Jetzt forken',
@@ -45,7 +45,7 @@ const STEPS: OnboardingStep[] = [
   {
     title: 'cv-data.ts ausfüllen',
     description:
-      'Eine einzige Datei mit deinen Daten — Name, Bio, Erfahrung, Projekte, Skills. Alle Layouts lesen daraus, du musst nichts sonst anfassen.',
+      'Eine Datei mit allen Daten: Name, Bio, Erfahrung, Projekte, Skills. Alle Layouts lesen daraus.',
     icon: FileCode2,
     href: CV_DATA_URL,
     linkLabel: 'Datei ansehen',
@@ -53,13 +53,13 @@ const STEPS: OnboardingStep[] = [
   {
     title: 'Theme & Layout wählen',
     description:
-      'Zwölf Farbthemen, Dark Mode und fünf komplett unterschiedliche Layouts direkt im Einstellungsmenü oben rechts durchprobieren — und dich am Ende für die eine Variante entscheiden, die zu dir passt.',
+      'Zwölf Farbthemen, Dark Mode und fünf Layouts im Einstellungsmenü oben rechts.',
     icon: Palette,
   },
   {
     title: 'Kostenlos deployen',
     description:
-      'Rein statisch — npm run build und der dist-Ordner läuft auf Vercel, GitHub Pages oder jedem anderen Static Host.',
+      'Rein statisch. npm run build ausführen, dann den dist-Ordner auf Vercel, GitHub Pages oder einem anderen Static Host hochladen.',
     icon: Rocket,
   },
 ];
@@ -68,28 +68,27 @@ const VARIANTS = [
   {
     path: '/minimal',
     label: 'Minimal',
-    description: 'Reduzierter Editorial-Stil — eine Spalte, viel Weißraum, klare Typografie.',
+    description: 'Eine Spalte, viel Weißraum, klare Typografie.',
   },
   {
     path: '/sidebar',
     label: 'Sidebar',
-    description: 'Fixierte, farbige Sidebar neben einer luftigen, hellen Lesespalte.',
+    description: 'Farbige Sidebar links, heller Lesebereich rechts.',
   },
   {
     path: '/creative',
     label: 'Creative',
-    description: 'Lauter Fullscreen-Hero mit diagonalem Akzent und Bildkarten für Projekte.',
+    description: 'Großer Hero-Bereich, Bildkarten für Projekte.',
   },
   {
     path: '/puzzle',
     label: 'Puzzle',
-    description:
-      'Spielerisch: Besucher ziehen Pentomino-Puzzleteile, um das Profil selbst zusammenzusetzen.',
+    description: 'Besucher setzen das Profil aus Puzzleteilen zusammen.',
   },
   {
     path: '/terminal',
     label: 'Terminal',
-    description: 'Interaktives Terminal — Slash-Befehle schalten die CV-Abschnitte frei.',
+    description: 'Terminal mit Befehlen, die die CV-Abschnitte anzeigen.',
   },
 ] as const;
 
@@ -97,12 +96,12 @@ const FEATURES = [
   {
     icon: Layers,
     title: 'Eine zentrale Datenquelle',
-    description: 'Alle Layouts rendern denselben cvData-Datensatz — einmal pflegen, überall aktuell.',
+    description: 'Alle Layouts nutzen denselben cvData-Datensatz. Einmal ändern, überall aktuell.',
   },
   {
     icon: Palette,
     title: '12 Farbthemen',
-    description: 'Von Ink über Neon bis Rosegold — jederzeit live umschaltbar, ohne Reload.',
+    description: 'Jederzeit umschaltbar, ohne Neuladen der Seite.',
   },
   {
     icon: MoonStar,
@@ -112,17 +111,17 @@ const FEATURES = [
   {
     icon: ShieldCheck,
     title: 'Rein statisch',
-    description: 'Kein Server, keine Datenbank, keine Umgebungsvariablen — läuft überall.',
+    description: 'Kein Server, keine Datenbank, keine Umgebungsvariablen.',
   },
   {
     icon: Sparkles,
     title: 'React, TypeScript, Tailwind',
-    description: 'Vertraute, moderne Grundlagen plus Framer Motion für feine Übergänge.',
+    description: 'Dazu Framer Motion für Übergänge.',
   },
   {
     icon: Globe,
     title: 'Frei hostbar',
-    description: 'Vercel, GitHub Pages oder ein beliebiger Static Host — deine Wahl.',
+    description: 'Vercel, GitHub Pages oder jeder andere Static Host.',
   },
 ] as const;
 
@@ -148,14 +147,12 @@ export default function LandingPage() {
             Open-Source CV-Vorlage
           </p>
           <h1 className="mt-8 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Fünf Stile zum Ausprobieren. Am Ende: nur noch deiner.
+            Fünf Stile zum Ausprobieren
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/85">
-            Diese Seite zeigt fünf grundverschiedene CV-Layouts nebeneinander — als Inspiration,
-            nicht als Endprodukt. Fork das Repo, vergleich die Varianten, entscheide dich für eine
-            (z. B. nur Terminal) und wirf den Rest raus. Trag danach deine eigenen Daten in die
-            zentrale <code className="rounded bg-white/15 px-1.5 py-0.5 text-base">cv-data.ts</code>{' '}
-            ein.
+            Diese Seite zeigt fünf CV-Layouts nebeneinander. Fork das Repo, wähl eine Variante,
+            lösch den Rest und trag deine Daten in{' '}
+            <code className="rounded bg-white/15 px-1.5 py-0.5 text-base">cv-data.ts</code> ein.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
@@ -226,17 +223,16 @@ export default function LandingPage() {
               Varianten zum Durchprobieren
             </h2>
             <p className="mt-4 text-base leading-7 text-muted">
-              Jede Variante rendert denselben Beispiel-Lebenslauf mit komplett anderer visueller
-              Sprache — probier sie live durch, bevor du dich entscheidest.
+              Jede Variante zeigt denselben Beispiel-Lebenslauf, nur anders gestaltet.
             </p>
           </div>
           <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-dashed border-primary/40 bg-bg p-5 text-center text-sm leading-7 text-muted">
-            Alle fünf Varianten liegen hier nebeneinander, damit du vergleichen kannst. In deinem
-            eigenen Fork reicht in der Regel eine: lösch die nicht gebrauchten Dateien in{' '}
+            Alle fünf Varianten stehen hier zum Vergleich. In deinem Fork brauchst du meist nur
+            eine: lösch die anderen Dateien in{' '}
             <code className="rounded bg-surface px-1.5 py-0.5">src/layouts/variants/</code> und
-            entfern ihre Routen/Nav-Einträge in{' '}
+            entfern ihre Einträge in{' '}
             <code className="rounded bg-surface px-1.5 py-0.5">src/router/AppRouter.tsx</code>.
-            Genaue Schritte stehen im README.
+            Details stehen im README.
           </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {VARIANTS.map((variant) => (
@@ -291,13 +287,12 @@ export default function LandingPage() {
             Zur Inspiration
           </p>
           <h2 className="font-display text-2xl font-bold text-apptext sm:text-3xl">
-            Deine Seite braucht deine Handschrift
+            Passe die Seite an dich an
           </h2>
           <p className="max-w-2xl text-base leading-7 text-muted">
-            Eine gute persönliche Seite sieht nicht wie eine Vorlage aus, sondern wie die Person
-            dahinter. Meine eigene Seite unter eddy.rip ist komplett unabhängig von diesem Repo
-            entstanden — ganz bewusst individuell. Nutz diese Templates als Startpunkt, aber hör
-            dort nicht auf: Bau weiter, bis es sich wie deins anfühlt.
+            Diese Templates sind ein Startpunkt. Meine eigene Seite unter eddy.rip nutzt dieses
+            Repo nicht — ich habe sie komplett eigenständig gebaut. Ändere die Templates so, wie
+            du es brauchst.
           </p>
           <a
             href={OWN_CV_URL}
@@ -314,13 +309,14 @@ export default function LandingPage() {
         <div
           className="mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] p-10 text-center text-white sm:p-14"
           style={{
-            background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)',
+            background:
+              'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)',
           }}
         >
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Bereit loszulegen?</h2>
           <p className="mx-auto mt-3 max-w-xl text-white/85">
-            Das Repo ist öffentlich, MIT-lizenziert und frei forkbar — kein Zugriff, keine
-            Freigabe, kein Account nötig.
+            Das Repo ist öffentlich und MIT-lizenziert. Kein Zugriff, keine Freigabe, kein Account
+            nötig.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a

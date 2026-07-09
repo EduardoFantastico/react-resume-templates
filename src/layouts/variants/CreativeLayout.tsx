@@ -38,11 +38,19 @@ export default function CreativeLayout() {
           <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white">
             {personal.title}
           </p>
-          <h1
-            className="mt-6 break-words font-display font-black uppercase leading-[0.85] text-white"
-            style={{ fontSize: 'clamp(4rem, 10vw, 10rem)' }}
-          >
-            {personal.name}
+          <h1 className="mt-6 font-display font-black uppercase leading-[0.85] text-white">
+            {personal.name
+              .split(' ')
+              .filter(Boolean)
+              .map((part) => (
+                <span
+                  key={part}
+                  className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+                  style={{ fontSize: 'clamp(1.75rem, 9vw, 7rem)' }}
+                >
+                  {part}
+                </span>
+              ))}
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-8 text-white/85">{personal.bio}</p>
           <div className="mt-10 flex flex-wrap items-center gap-4">

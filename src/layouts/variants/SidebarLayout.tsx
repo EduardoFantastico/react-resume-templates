@@ -61,74 +61,76 @@ export default function SidebarLayout() {
   return (
     <BaseLayout variant="sidebar" fullBleed>
       <div className="lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[30%_70%]">
-        <aside className="space-y-8 bg-primary p-8 text-white sm:p-10 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] lg:self-start lg:overflow-y-auto lg:p-10">
-          <div className="space-y-4">
-            <SidebarPortrait />
-            <div>
-              <h1 className="font-display text-3xl font-bold leading-tight text-white">
-                {personal.name}
-              </h1>
-              <p className="mt-1 text-sm font-medium text-white/80">{personal.title}</p>
+        <aside className="bg-primary text-white">
+          <div className="space-y-8 p-8 sm:p-10 lg:sticky lg:top-20 lg:p-10">
+            <div className="space-y-4">
+              <SidebarPortrait />
+              <div>
+                <h1 className="font-display text-3xl font-bold leading-tight text-white">
+                  {personal.name}
+                </h1>
+                <p className="mt-1 text-sm font-medium text-white/80">{personal.title}</p>
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-3 border-t border-white/20 pt-6 text-sm text-white/90">
-            <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 shrink-0" />
-              <span className="break-all">{personal.email}</span>
+            <div className="space-y-3 border-t border-white/20 pt-6 text-sm text-white/90">
+              <div className="flex items-center gap-3">
+                <Mail className="h-4 w-4 shrink-0" />
+                <span className="break-all">{personal.email}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-4 w-4 shrink-0" />
+                <span>{personal.phone}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin className="h-4 w-4 shrink-0" />
+                <span>{personal.location}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Phone className="h-4 w-4 shrink-0" />
-              <span>{personal.phone}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <MapPin className="h-4 w-4 shrink-0" />
-              <span>{personal.location}</span>
-            </div>
-          </div>
 
-          {socialEntries.length > 0 ? (
-            <div className="flex flex-wrap gap-2 border-t border-white/20 pt-6">
-              {socialEntries.map(([key, url]) => {
-                const Icon = SOCIAL_ICONS[key];
-                return (
-                  <a
-                    key={key}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={key}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition-colors hover:bg-white/20 focus-ring"
+            {socialEntries.length > 0 ? (
+              <div className="flex flex-wrap gap-2 border-t border-white/20 pt-6">
+                {socialEntries.map(([key, url]) => {
+                  const Icon = SOCIAL_ICONS[key];
+                  return (
+                    <a
+                      key={key}
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={key}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition-colors hover:bg-white/20 focus-ring"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            <div className="space-y-3 border-t border-white/20 pt-6">
+              <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <span
+                    key={skill.name}
+                    className="rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-medium text-white"
                   >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                );
-              })}
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
             </div>
-          ) : null}
 
-          <div className="space-y-3 border-t border-white/20 pt-6">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Skills</h2>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <span
-                  key={skill.name}
-                  className="rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-medium text-white"
-                >
-                  {skill.name}
-                </span>
+            <div className="space-y-2 border-t border-white/20 pt-6 text-sm text-white/90">
+              <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Sprachen</h2>
+              {cvData.languages.map((language) => (
+                <div key={language.language} className="flex items-center justify-between gap-3">
+                  <span>{language.language}</span>
+                  <span className="text-white/70">{language.level}</span>
+                </div>
               ))}
             </div>
-          </div>
-
-          <div className="space-y-2 border-t border-white/20 pt-6 text-sm text-white/90">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Sprachen</h2>
-            {cvData.languages.map((language) => (
-              <div key={language.language} className="flex items-center justify-between gap-3">
-                <span>{language.language}</span>
-                <span className="text-white/70">{language.level}</span>
-              </div>
-            ))}
           </div>
         </aside>
 
